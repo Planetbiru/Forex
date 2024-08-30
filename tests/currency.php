@@ -15,7 +15,7 @@ td{
     padding: 4px 8px;
 }
 </style>
-<table border="1" style="">
+<table border="1" style="border-collapse:collapse">
     <thead>
         <td>From</td>
         <td>To</td>

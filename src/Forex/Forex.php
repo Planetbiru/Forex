@@ -82,8 +82,6 @@ class Forex
         return $to/$from;
     }
 
-
-
     /**
      * Get currency rates
      *
