@@ -1,0 +1,17 @@
+{
+    "name": "planetbiru/forex",
+    "description": "Foreign Exchange",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Planetbiru\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kamshory, MT",
+            "email": "kamshory@yahoo.com"
+        }
+    ],
+    "require": {}
+}
