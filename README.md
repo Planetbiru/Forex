@@ -10,6 +10,7 @@ Fetching historical data (especially via `loadHistory` or `loadByDate`) involves
 
 ## Table of Contents
 
+* [Installation](#installation)
 * [Initialization](#initialization)
 * [Loading Data](#loading-data)
 
@@ -25,6 +26,16 @@ Fetching historical data (especially via `loadHistory` or `loadByDate`) involves
   * [convert](#convert)
   * [getAllRates](#getallrates)
   * [getDate](#getdate)
+
+---
+
+## Installation
+
+Install the library using [Composer](https://getcomposer.org/):
+
+```bash
+composer require planetbiru/forex
+```
 
 ---
 
@@ -353,5 +364,3 @@ if ($forex->getDate() === null) {
     echo "Data is ready.";
 }
 ```
-
-
