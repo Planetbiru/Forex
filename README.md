@@ -10,6 +10,7 @@ Fetching historical data (especially via `loadHistory` or `loadByDate`) involves
 
 ## Table of Contents
 
+* [Installation](#installation)
 * [Initialization](#initialization)
 * [Loading Data](#loading-data)
 
@@ -25,6 +26,16 @@ Fetching historical data (especially via `loadHistory` or `loadByDate`) involves
   * [convert](#convert)
   * [getAllRates](#getallrates)
   * [getDate](#getdate)
+
+---
+
+## Installation
+
+Install the library using [Composer](https://getcomposer.org/):
+
+```bash
+composer require planetbiru/forex
+```
 
 ---
 
@@ -153,8 +164,8 @@ Loads exchange rates for a specific date (YYYY-MM-DD) from the full historical d
 
 ```php
 $forex = new Forex();
-$forex->loadByDate('2023-01-01'); // Ensure the date is not a holiday/weekend
-echo "USD rate on 2023-01-01: " . $forex->get('USD');
+$forex->loadByDate('2024-01-03'); // Ensure the date is not a holiday/weekend
+echo "USD rate on 2024-01-03: " . $forex->get('USD');
 ```
 
 **Example 2: Handle a date that is not found**
@@ -353,5 +364,3 @@ if ($forex->getDate() === null) {
     echo "Data is ready.";
 }
 ```
-
-

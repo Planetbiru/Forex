@@ -72,13 +72,32 @@ class Forex
      */
     public function load($url)
     {
-        $content = @file_get_contents($url);
+        $content = $this->fetchUrl($url);
 
         if ($content === false) {
             throw new \Exception("Cannot load forex data");
         }
 
         $this->parseContent($content);
+    }
+
+    /**
+     * Fetches content from a URL using cURL.
+     *
+     * @param string $url The URL to fetch.
+     * @return string|false The content or false on failure.
+     */
+    protected function fetchUrl($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+        $content = curl_exec($ch);
+
+        return $content;
     }
 
     /**
@@ -115,6 +134,34 @@ class Forex
      * ===================================================== */
 
     /**
+     * Loads historical data into memory, using a local cache file if available and valid (24 hours).
+     *
+     * @return void
+     * @throws \Exception
+     */
+    protected function loadHistoryData()
+    {
+        if ($this->historyContent !== null) {
+            return;
+        }
+
+        $cacheFile = sys_get_temp_dir() . '/eurofxref-hist.xml';
+        $cacheDuration = 24 * 3600; // 24 hours
+
+        if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheDuration)) {
+            $this->historyContent = file_get_contents($cacheFile);
+        }
+
+        if (!$this->historyContent) {
+            $this->historyContent = $this->fetchUrl(self::ECB_HISTORY);
+            if ($this->historyContent === false) {
+                throw new \Exception("Cannot load historical data");
+            }
+            file_put_contents($cacheFile, $this->historyContent);
+        }
+    }
+
+    /**
      * Loads the latest daily reference rates.
      *
      * @return void
@@ -146,12 +193,7 @@ class Forex
      */
     public function loadHistory()
     {
-        if ($this->historyContent === null) {
-            $this->historyContent = @file_get_contents(self::ECB_HISTORY);
-            if ($this->historyContent === false) {
-                throw new \Exception("Cannot load historical data");
-            }
-        }
+        $this->loadHistoryData();
         
         $this->parseContent($this->historyContent);
     }
@@ -165,14 +207,18 @@ class Forex
      */
     public function loadByDate($date)
     {
-        if ($this->historyContent === null) {
-            $this->historyContent = @file_get_contents(self::ECB_HISTORY);
-            if ($this->historyContent === false) {
-                throw new \Exception("Cannot load historical data");
+        $xmlContent = null;
+        if (time() - strtotime($date) <= 90 * 24 * 3600) {
+            $xmlContent = $this->fetchUrl(self::ECB_90DAYS);
+            if ($xmlContent === false) {
+                throw new \Exception("Cannot load 90 days data");
             }
+        } else {
+            $this->loadHistoryData();
+            $xmlContent = $this->historyContent;
         }
 
-        $xml = simplexml_load_string($this->historyContent);
+        $xml = simplexml_load_string($xmlContent);
 
         foreach ($xml->Cube->Cube as $day) {
             if ((string)$day['time'] === $date) {
@@ -192,6 +238,7 @@ class Forex
         }
 
         throw new \Exception("Date not found in ECB history");
+        
     }
 
     /* =====================================================
