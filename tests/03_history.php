@@ -15,7 +15,7 @@ $fx = new Forex();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test 3: History Data</title>
+    <title>Test 3: Last 90 Days</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; padding: 20px; max-width: 900px; margin: 0 auto; background-color: #f9f9f9; }
         h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
@@ -34,9 +34,8 @@ $fx = new Forex();
     <a href="currency.php">&larr; Back to Menu</a>
 </div>
 
-<h1>3. Historical Data</h1>
+<h1>3. Last 90 Days</h1>
 
-<h2>Load Last 90 Days</h2>
 <div class="card">
     <?php
     try {
@@ -49,34 +48,7 @@ $fx = new Forex();
     ?>
 </div>
 
-<h2>Load Full History (Latest)</h2>
-<div class="card">
-    <?php
-    try {
-        $fx->loadHistory();
-        echo "<div class='success'>Full history loaded (latest date parsed).</div>";
-        echo "<div>Date: <strong>" . $fx->getDate() . "</strong></div>";
-    } catch (Exception $e) {
-        echo "<div class='error'>Error: " . $e->getMessage() . "</div>";
-    }
-    ?>
-</div>
 
-<h2>Load By Specific Date (History)</h2>
-<div class="card">
-    <?php
-    $searchDate = '2023-01-03';
-    echo "<div>Attempting to load data for: <span class='code'>$searchDate</span> (Downloads full history)</div>";
-    try {
-        $fx->loadByDate($searchDate);
-        echo "<div class='success'>Data found and loaded.</div>";
-        echo "<div>Date: <strong>" . $fx->getDate() . "</strong></div>";
-        echo "<div>USD Rate on $searchDate: <strong>" . $fx->get('USD') . "</strong></div>";
-    } catch (Exception $e) {
-        echo "<div class='error'>Error: " . $e->getMessage() . "</div>";
-    }
-    ?>
-</div>
 
 </body>
 </html>
